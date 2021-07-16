@@ -2,8 +2,9 @@ import sys, os
 from icecream import ic
 from PyQt5 import QtWidgets
 from PyQt5.QtCore import QDir, QFile
-from PyQt5.QtGui import QStandardItem, QStandardItemModel
+from PyQt5.QtGui import QIcon, QStandardItem, QStandardItemModel
 from tree_notes import Ui_TreeNotesWin
+import tbar_rc
 
 
 class Main(QtWidgets.QMainWindow, Ui_TreeNotesWin):
@@ -14,6 +15,7 @@ class Main(QtWidgets.QMainWindow, Ui_TreeNotesWin):
         self.ui = Ui_TreeNotesWin()
         self.ui.setupUi(self)
         self.setuptreeview()
+        self.setuptbar()
 
     def setuptreeview(self):
         self.dir = QDir("/home/rfile/revclips/")
@@ -26,12 +28,23 @@ class Main(QtWidgets.QMainWindow, Ui_TreeNotesWin):
             self.treemodel.appendRow(QStandardItem(self.myitem))
         self.ui.treeRevNote.doubleClicked.connect(self.getValue)
 
+    def setuptbar(self):
+        self.tbarbtn01 = QtWidgets.QAction("open", self)
+        self.tbarbtn01.setIcon(QIcon(":/icon/bdoccopy.png"))
+        self.tbarbtn01.setStatusTip("open")
+        self.ui.toolBar.addAction(self.tbarbtn01)
+
+        #self.ui.toolBar
+
     def getValue(self, val):
-        #print(val.data())
-        #print(val.row())
+        self.idx = val.row()
+        self.txt = self.dir.entryList()[self.idx]
+        ic(val.data())
+        ic(val.row())
+        ic(self.txt)
         #print(val.column())
         self.fdir = self.dir.path() + '/'
-        self.myfname = self.fdir + (val.data() + ".txt")
+        self.myfname = self.fdir + self.dir.entryList()[self.idx]
         ic(self.myfname)
         self.fod = open(self.myfname)
         self.fdata = self.fod.read()
