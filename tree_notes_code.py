@@ -41,7 +41,13 @@ class Main(QtWidgets.QMainWindow, Ui_TreeNotesWin):
         self.tbarbtn02.setIcon(QIcon(":/icon/cliptext.png"))
         self.tbarbtn02.triggered.connect(self.txt_to_clp)
         self.ui.toolBar.addAction(self.tbarbtn02)
-
+        self.tbarbtn03 = QtWidgets.QAction("rename", self)
+        self.tbarbtn03.setStatusTip("rename file")
+        self.tbarbtn03.setIcon(QIcon(":icon/docrename.png"))
+        self.tbarbtn03.triggered.connect(self.file_rename)
+        self.ui.toolBar.addAction(self.tbarbtn03)
+        #menu file rename
+        self.ui.actionRename.triggered.connect(self.file_rename)
         #self.ui.toolBar
 
     def get_Val_edit(self, val):
@@ -70,9 +76,21 @@ class Main(QtWidgets.QMainWindow, Ui_TreeNotesWin):
         self.ui.txtRevNote.setText(self.fdata)
 
     def txt_to_clp(self):
-
-        # self.txtclp = self.ui.txtRevNote.toPlainText()
         clipboard.setText(self.ui.txtRevNote.toPlainText())
+
+    def file_rename(self):
+        self.highlightindex = self.treemodel.itemData(
+            self.ui.treeRevNote.selectedIndexes()[0])
+        ic(self.highlightindex[0])
+        self.fdir = self.dir.path() + '/'
+        self.myfname = self.fdir + self.highlightindex[0] + ".txt"
+        self.text = QtWidgets.QInputDialog.getText(self,
+                                                   'rename',
+                                                   'rename file:',
+                                                   text=self.myfname)
+        if self.text[1]:
+            os.rename(self.myfname, self.text[0])
+            self.setuptreeview()
 
 
 if __name__ == "__main__":

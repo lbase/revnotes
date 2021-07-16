@@ -46,7 +46,7 @@
      <x>0</x>
      <y>0</y>
      <width>640</width>
-     <height>27</height>
+     <height>34</height>
     </rect>
    </property>
    <widget class="QMenu" name="menuFile">
@@ -55,6 +55,8 @@
     </property>
     <addaction name="action_Open"/>
     <addaction name="action_New"/>
+    <addaction name="separator"/>
+    <addaction name="actionReName"/>
    </widget>
    <widget class="QMenu" name="menuEdit">
     <property name="title">
@@ -96,9 +98,22 @@
     <string>&amp;New</string>
    </property>
   </action>
+  <action name="actionRename">
+   <property name="text">
+    <string>Rename</string>
+   </property>
+  </action>
+  <action name="action">
+   <property name="text">
+    <string>Rename</string>
+   </property>
+  </action>
+  <action name="actionReName">
+   <property name="text">
+    <string>ReName</string>
+   </property>
+  </action>
  </widget>
- <resources>
-  <include location="tbar.qrc"/>
- </resources>
+ <resources/>
  <connections/>
 </ui>
