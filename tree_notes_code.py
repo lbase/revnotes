@@ -18,6 +18,7 @@ class Main(QtWidgets.QMainWindow, Ui_TreeNotesWin):
         self.ui.setupUi(self)
         self.setuptreeview()
         self.setuptbar()
+        self.clipboard = QGuiApplication.clipboard()
 
     def setuptreeview(self):
         self.dir = QDir("/home/rfile/revclips/")
@@ -47,7 +48,7 @@ class Main(QtWidgets.QMainWindow, Ui_TreeNotesWin):
         self.tbarbtn03.triggered.connect(self.file_rename)
         self.ui.toolBar.addAction(self.tbarbtn03)
         #menu file rename
-        self.ui.actionRename.triggered.connect(self.file_rename)
+        self.ui.actionReName.triggered.connect(self.file_rename)
         #self.ui.toolBar
 
     def get_Val_edit(self, val):
@@ -76,7 +77,11 @@ class Main(QtWidgets.QMainWindow, Ui_TreeNotesWin):
         self.ui.txtRevNote.setText(self.fdata)
 
     def txt_to_clp(self):
-        clipboard.setText(self.ui.txtRevNote.toPlainText())
+        self.cursor = self.ui.txtRevNote.textCursor()
+        ic("Selection start: %d end: %d" %
+           (self.cursor.selectionStart(), self.cursor.selectionEnd()))
+        ic(self.cursor.selectedText())
+        self.clipboard.setText(self.ui.txtRevNote.toPlainText())
 
     def file_rename(self):
         self.highlightindex = self.treemodel.itemData(
@@ -95,7 +100,7 @@ class Main(QtWidgets.QMainWindow, Ui_TreeNotesWin):
 
 if __name__ == "__main__":
     app = QtWidgets.QApplication(sys.argv)
-    clipboard = app.clipboard()
+    # clipboard = app.clipboard()
 
     main = Main()
     main.show()

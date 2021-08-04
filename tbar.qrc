@@ -1,5 +1,6 @@
 <RCC>
-  <qresource prefix="icon/">
+  <qresource prefix="/icon">
+    <file alias="pipette">icons/pipette-color.png</file>
     <file alias="bdoccopy.png">icons/blue-document-copy.png</file>
     <file alias="cliplist.png">icons/clipboard-list.png</file>
     <file alias="clippast.png">icons/clipboard-paste.png</file>

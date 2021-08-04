@@ -2,3 +2,19 @@
 __pycache__/
 revenv/
 
+
+icons/
+
+revnotes.cflags
+
+revnotes.config
+
+revnotes.creator
+
+revnotes.creator.user
+
+revnotes.cxxflags
+
+revnotes.files
+
+revnotes.includes
