@@ -22,3 +22,5 @@ revnotes.includes
 .ipynb_checkpoints/
 
 indexdir/
+
+whooshtest.ipynb
