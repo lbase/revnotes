@@ -18,3 +18,7 @@ revnotes.cxxflags
 revnotes.files
 
 revnotes.includes
+
+.ipynb_checkpoints/
+
+indexdir/
