@@ -1,25 +1,41 @@
-def createSearchableData(root):
-        
-        
-        schema = Schema(title=TEXT(stored=True),path=ID(stored=True),\
-                content=TEXT,textdata=TEXT(stored=True))
-        ic(schema)        
-        if not os.path.exists("indexdir"):
-            os.mkdir("indexdir")
+import os
+from icecream import ic
+from whoosh.index import create_in
+from whoosh.fields import Schema, TEXT, ID
+import sys
+from whoosh.qparser import QueryParser
+from whoosh import scoring
+from whoosh.index import open_dir
 
-        # Creating a index writer to add document as per schema
-        ix = create_in("indexdir",schema)
-        writer = ix.writer()
 
-        filepaths = [os.path.join(root,i) for i in os.listdir(root)]
-        for path in filepaths:
-            fp = open(path,'r')
-           # ic(path)
-            text = fp.read()
-            # ic(text)
-            writer.add_document(title=path.split("/")[4], path=path,\
-            content=text,textdata=text)
-            fp.close()
-        writer.commit()
-        return ix.searcher()
-        
+class revsearch():
+    def __init__(self) -> None:
+        super(revsearch, self).__init__()
+
+        def createSearchableData(root):
+            self.root = root
+            self.indexdir = root + "/indexdir"
+
+            self.schema = Schema(title=TEXT(stored=True),path=ID(stored=True),\
+                    content=TEXT,textdata=TEXT(stored=True))
+
+            if not os.path.exists(self.indexdir):
+                os.mkdir(self.indexdir)
+
+            # Creating a index writer to add document as per schema
+            self.ix = create_in(self.indexdir, self.schema)
+            self.writer = self.ix.writer()
+
+            self.filepaths = [
+                os.path.join(self.root, i) for i in os.listdir(self.root)
+            ]
+            for path in self.filepaths:
+                fp = open(path, 'r')
+                # ic(path)
+                text = fp.read()
+                # ic(text)
+                self.writer.add_document(title=path.split("/")[4], path=path,\
+                content=text,textdata=text)
+                fp.close()
+            self.writer.commit()
+            return self.ix.searcher()
