@@ -1,0 +1,553 @@
+From 082c7a26adbf4a759f1f2c5bb92f0559b07b72e7 Mon Sep 17 00:00:00 2001
+From: lbase <lbase@finormile.com>
+Date: Thu, 5 Aug 2021 11:34:38 -0400
+Subject: [PATCH] search test whoosh kind of working
+
+---
+ search.py   |  25 +++
+ wtest.ipynb | 427 +++++++++++++++++++++++++++++++++++++++++++++++-----
+ 2 files changed, 416 insertions(+), 36 deletions(-)
+ create mode 100644 search.py
+
+diff --git a/search.py b/search.py
+new file mode 100644
+index 0000000..11edbe8
+--- /dev/null
++++ b/search.py
+@@ -0,0 +1,25 @@
++def createSearchableData(root):
++        
++        
++        schema = Schema(title=TEXT(stored=True),path=ID(stored=True),\
++                content=TEXT,textdata=TEXT(stored=True))
++        ic(schema)        
++        if not os.path.exists("indexdir"):
++            os.mkdir("indexdir")
++
++        # Creating a index writer to add document as per schema
++        ix = create_in("indexdir",schema)
++        writer = ix.writer()
++
++        filepaths = [os.path.join(root,i) for i in os.listdir(root)]
++        for path in filepaths:
++            fp = open(path,'r')
++           # ic(path)
++            text = fp.read()
++            # ic(text)
++            writer.add_document(title=path.split("/")[4], path=path,\
++            content=text,textdata=text)
++            fp.close()
++        writer.commit()
++        return ix.searcher()
++        
+\ No newline at end of file
+diff --git a/wtest.ipynb b/wtest.ipynb
+index 6d59f04..cc5b554 100644
+--- a/wtest.ipynb
++++ b/wtest.ipynb
+@@ -3,15 +3,20 @@
+   {
+    "cell_type": "code",
+    "execution_count": null,
+-   "source": [],
++   "metadata": {},
+    "outputs": [],
+-   "metadata": {}
++   "source": []
+   },
+   {
+    "cell_type": "code",
+    "execution_count": null,
++   "metadata": {
++    "tags": []
++   },
++   "outputs": [],
+    "source": [
+     "import os\n",
++    "from icecream import ic\n",
+     "from whoosh.index import create_in\n",
+     "from whoosh.fields import Schema, TEXT, ID\n",
+     "import sys\n",
+@@ -19,27 +24,30 @@
+     "from whoosh import scoring\n",
+     "from whoosh.index import open_dir\n",
+     "\n"
+-   ],
+-   "outputs": [],
+-   "metadata": {}
++   ]
+   },
+   {
+    "cell_type": "markdown",
++   "metadata": {},
+    "source": [
+     "         Schema definition: title(name of file), path(as ID), content(indexed but not stored),textdata (stored text content)\n",
+     "  "
+-   ],
+-   "metadata": {}
++   ]
+   },
+   {
+    "cell_type": "code",
+-   "execution_count": null,
++   "execution_count": 65,
++   "metadata": {
++    "tags": []
++   },
++   "outputs": [],
+    "source": [
+     "def createSearchableData(root):\n",
+     "        \n",
+     "        \n",
+     "        schema = Schema(title=TEXT(stored=True),path=ID(stored=True),\\\n",
+     "                content=TEXT,textdata=TEXT(stored=True))\n",
++    "        ic(schema)        \n",
+     "        if not os.path.exists(\"indexdir\"):\n",
+     "            os.mkdir(\"indexdir\")\n",
+     "\n",
+@@ -50,66 +58,413 @@
+     "        filepaths = [os.path.join(root,i) for i in os.listdir(root)]\n",
+     "        for path in filepaths:\n",
+     "            fp = open(path,'r')\n",
+-    "            print(path)\n",
++    "           # ic(path)\n",
+     "            text = fp.read()\n",
+-    "            writer.add_document(title=path.split(\"/\")[0], path=path,\\\n",
++    "            # ic(text)\n",
++    "            writer.add_document(title=path.split(\"/\")[4], path=path,\\\n",
+     "            content=text,textdata=text)\n",
+     "            fp.close()\n",
+     "        writer.commit()\n",
+-    "        return writer\n"
++    "        return ix.searcher()"
++   ]
++  },
++  {
++   "cell_type": "code",
++   "execution_count": 66,
++   "metadata": {},
++   "outputs": [
++    {
++     "name": "stderr",
++     "output_type": "stream",
++     "text": [
++      "ic| schema: <Schema: ['content', 'path', 'textdata', 'title']>\n"
++     ]
++    }
+    ],
++   "source": [
++    "root = \"/home/rfile/revclips\"\n",
++    "mysearch = createSearchableData(root)"
++   ]
++  },
++  {
++   "cell_type": "code",
++   "execution_count": null,
++   "metadata": {},
+    "outputs": [],
+-   "metadata": {}
++   "source": [
++    "qp = QueryParser(\"content\", mysearch.schema)\n",
++    "q = qp.parse(\"cache\")\n",
++    "# with mysearch as s:\n",
++    "#for s in mysearch:\n",
++    "myresults = mysearch.search(q)\n",
++    "\n",
++    "\n"
++   ]
+   },
+   {
+    "cell_type": "code",
+    "execution_count": null,
++   "metadata": {},
++   "outputs": [],
+    "source": [
+-    "root = \"/home/rfile/rev_notes\"\n",
+-    "myindex = createSearchableData(root)"
++    "myresults"
++   ]
++  },
++  {
++   "cell_type": "code",
++   "execution_count": 55,
++   "metadata": {},
++   "outputs": [
++    {
++     "data": {
++      "text/plain": [
++       "41"
++      ]
++     },
++     "execution_count": 55,
++     "metadata": {},
++     "output_type": "execute_result"
++    }
+    ],
+-   "outputs": [],
+-   "metadata": {}
++   "source": [
++    "len(myresults)"
++   ]
++  },
++  {
++   "cell_type": "markdown",
++   "metadata": {},
++   "source": [
++    "content is not stored"
++   ]
+   },
+   {
+    "cell_type": "code",
+-   "execution_count": null,
++   "execution_count": 59,
++   "metadata": {},
++   "outputs": [
++    {
++     "data": {
++      "text/plain": [
++       "'/home/rfile/revclips/cachereview-67.txt'"
++      ]
++     },
++     "execution_count": 59,
++     "metadata": {},
++     "output_type": "execute_result"
++    }
++   ],
++   "source": [
++    "myresults[3][\"path\"] \n",
++    "\n"
++   ]
++  },
++  {
++   "cell_type": "code",
++   "execution_count": 60,
++   "metadata": {},
++   "outputs": [
++    {
++     "data": {
++      "text/plain": [
++       "'cachereview-67.txt'"
++      ]
++     },
++     "execution_count": 60,
++     "metadata": {},
++     "output_type": "execute_result"
++    }
++   ],
+    "source": [
+-    "myindex.doc_count()"
++    "myresults[3][\"title\"]"
++   ]
++  },
++  {
++   "cell_type": "code",
++   "execution_count": 61,
++   "metadata": {},
++   "outputs": [
++    {
++     "data": {
++      "text/plain": [
++       "'When you go to hide a cache, think of the reason you are bringing people to that spot. If the only reason is for the cache, then find a better spot. '"
++      ]
++     },
++     "execution_count": 61,
++     "metadata": {},
++     "output_type": "execute_result"
++    }
+    ],
++   "source": [
++    "myresults[3][\"textdata\"]"
++   ]
++  },
++  {
++   "cell_type": "code",
++   "execution_count": 70,
++   "metadata": {},
++   "outputs": [
++    {
++     "data": {
++      "text/plain": [
++       "<Hit {'path': '/home/rfile/revclips/parking_coords_same.txt', 'textdata': '\\n\\n    I note you have posted a set of \"parking\" coordinates. However, these coordinates are the exact same location as the cache itself. I suspect this was not your intent to have folks park at the cache location.\\n\\n    May I ask you edit the cache page to reflect the \"real\" parking coordinates you want to designate? I have disabled the cache to facilitate this edit. Once done, please re-enable / submit the cache to allow me to look at this once again.\\n', 'title': 'parking_coords_same.txt'}>"
++      ]
++     },
++     "execution_count": 70,
++     "metadata": {},
++     "output_type": "execute_result"
++    }
++   ],
++   "source": [
++    "myresults[0:3][1]"
++   ]
++  },
++  {
++   "cell_type": "code",
++   "execution_count": null,
++   "metadata": {},
++   "outputs": [],
++   "source": []
++  },
++  {
++   "cell_type": "code",
++   "execution_count": null,
++   "metadata": {},
++   "outputs": [],
++   "source": []
++  },
++  {
++   "cell_type": "code",
++   "execution_count": null,
++   "metadata": {},
++   "outputs": [],
++   "source": []
++  },
++  {
++   "cell_type": "code",
++   "execution_count": null,
++   "metadata": {},
++   "outputs": [],
++   "source": []
++  },
++  {
++   "cell_type": "code",
++   "execution_count": null,
++   "metadata": {},
++   "outputs": [],
++   "source": []
++  },
++  {
++   "cell_type": "code",
++   "execution_count": null,
++   "metadata": {},
++   "outputs": [],
++   "source": []
++  },
++  {
++   "cell_type": "code",
++   "execution_count": null,
++   "metadata": {},
++   "outputs": [],
++   "source": []
++  },
++  {
++   "cell_type": "code",
++   "execution_count": null,
++   "metadata": {},
++   "outputs": [],
++   "source": []
++  },
++  {
++   "cell_type": "code",
++   "execution_count": null,
++   "metadata": {},
++   "outputs": [],
++   "source": []
++  },
++  {
++   "cell_type": "code",
++   "execution_count": null,
++   "metadata": {},
++   "outputs": [],
++   "source": []
++  },
++  {
++   "cell_type": "code",
++   "execution_count": null,
++   "metadata": {},
++   "outputs": [],
++   "source": []
++  },
++  {
++   "cell_type": "code",
++   "execution_count": null,
++   "metadata": {},
++   "outputs": [],
++   "source": []
++  },
++  {
++   "cell_type": "code",
++   "execution_count": null,
++   "metadata": {},
++   "outputs": [],
++   "source": []
++  },
++  {
++   "cell_type": "code",
++   "execution_count": null,
++   "metadata": {},
++   "outputs": [],
++   "source": []
++  },
++  {
++   "cell_type": "code",
++   "execution_count": null,
++   "metadata": {},
++   "outputs": [],
++   "source": []
++  },
++  {
++   "cell_type": "code",
++   "execution_count": null,
++   "metadata": {},
++   "outputs": [],
++   "source": []
++  },
++  {
++   "cell_type": "code",
++   "execution_count": null,
++   "metadata": {},
++   "outputs": [],
++   "source": []
++  },
++  {
++   "cell_type": "code",
++   "execution_count": null,
++   "metadata": {},
++   "outputs": [],
++   "source": []
++  },
++  {
++   "cell_type": "code",
++   "execution_count": null,
++   "metadata": {},
++   "outputs": [],
++   "source": []
++  },
++  {
++   "cell_type": "code",
++   "execution_count": null,
++   "metadata": {},
++   "outputs": [],
++   "source": []
++  },
++  {
++   "cell_type": "code",
++   "execution_count": null,
++   "metadata": {},
++   "outputs": [],
++   "source": []
++  },
++  {
++   "cell_type": "code",
++   "execution_count": null,
++   "metadata": {},
++   "outputs": [],
++   "source": []
++  },
++  {
++   "cell_type": "code",
++   "execution_count": null,
++   "metadata": {},
++   "outputs": [],
++   "source": []
++  },
++  {
++   "cell_type": "code",
++   "execution_count": null,
++   "metadata": {},
++   "outputs": [],
++   "source": []
++  },
++  {
++   "cell_type": "code",
++   "execution_count": null,
++   "metadata": {},
++   "outputs": [],
++   "source": []
++  },
++  {
++   "cell_type": "code",
++   "execution_count": null,
++   "metadata": {},
++   "outputs": [],
++   "source": []
++  },
++  {
++   "cell_type": "code",
++   "execution_count": null,
++   "metadata": {},
++   "outputs": [],
++   "source": []
++  },
++  {
++   "cell_type": "code",
++   "execution_count": null,
++   "metadata": {},
++   "outputs": [],
++   "source": []
++  },
++  {
++   "cell_type": "code",
++   "execution_count": null,
++   "metadata": {},
++   "outputs": [],
++   "source": []
++  },
++  {
++   "cell_type": "code",
++   "execution_count": null,
++   "metadata": {},
++   "outputs": [],
++   "source": []
++  },
++  {
++   "cell_type": "code",
++   "execution_count": null,
++   "metadata": {},
+    "outputs": [],
+-   "metadata": {}
++   "source": []
+   },
+   {
+    "cell_type": "code",
+    "execution_count": null,
+-   "source": [],
++   "metadata": {},
+    "outputs": [],
+-   "metadata": {}
++   "source": []
+   }
+  ],
+  "metadata": {
+-  "orig_nbformat": 4,
++  "interpreter": {
++   "hash": "344684ac67d6b9954d3a5a86bead710da52ef9f4810a3a455ea61238954a32cb"
++  },
++  "kernelspec": {
++   "display_name": "Python 3 (ipykernel)",
++   "language": "python",
++   "name": "python3"
++  },
+   "language_info": {
+-   "name": "python",
+-   "version": "3.8.10",
+-   "mimetype": "text/x-python",
+    "codemirror_mode": {
+     "name": "ipython",
+     "version": 3
+    },
+-   "pygments_lexer": "ipython3",
++   "file_extension": ".py",
++   "mimetype": "text/x-python",
++   "name": "python",
+    "nbconvert_exporter": "python",
+-   "file_extension": ".py"
+-  },
+-  "kernelspec": {
+-   "name": "python3",
+-   "display_name": "Python 3.8.10 64-bit ('revenv': venv)"
+-  },
+-  "interpreter": {
+-   "hash": "344684ac67d6b9954d3a5a86bead710da52ef9f4810a3a455ea61238954a32cb"
++   "pygments_lexer": "ipython3",
++   "version": "3.8.10"
+   }
+  },
+  "nbformat": 4,
+- "nbformat_minor": 2
+-}
+\ No newline at end of file
++ "nbformat_minor": 4
++}
+-- 
+2.25.1
+

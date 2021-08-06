@@ -14,7 +14,8 @@ class revsearch():
 
         def createSearchableData(root):
             self.root = root
-            self.indexdir = root + "/indexdir"
+            # don't store index in same dir as text files ...
+            self.indexdir = "home/rfile/index/revnotes"
 
             self.schema = Schema(title=TEXT(stored=True),path=ID(stored=True),\
                     content=TEXT,textdata=TEXT(stored=True))
