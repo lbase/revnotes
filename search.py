@@ -6,7 +6,7 @@ import sys
 from whoosh.qparser import QueryParser
 from whoosh import scoring
 from whoosh.index import open_dir
-
+# test note from bubba
 
 class revsearch():
     def __init__(self) -> None:
