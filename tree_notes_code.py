@@ -7,6 +7,7 @@ from PyQt5.QtCore import QDir, QFile
 from PyQt5.QtGui import *
 from tree_notes import Ui_TreeNotesWin
 import tbar_rc
+from lclsearch import revsearch
 
 
 class Main(QtWidgets.QMainWindow, Ui_TreeNotesWin):
@@ -21,9 +22,10 @@ class Main(QtWidgets.QMainWindow, Ui_TreeNotesWin):
         self.clipboard = QGuiApplication.clipboard()
 
     def setuptreeview(self):
-        self.dir = QDir("/home/rfile/revclips/")
-        self.dir.setNameFilters(["*.txt"])
-        self.lst = [os.path.splitext(x)[0] for x in self.dir.entryList()]
+        self.dir = revsearch.TxtFileList(self, "/home/rfile/rev_clips/")
+        ic(self.dir)
+        self.lst = revsearch.TxtFiles(self, "/home/rfile/rev_clips")
+        ic(self.lst)
         self.treemodel = QStandardItemModel(0, 1)
         self.ui.treeRevNote.setModel(self.treemodel)
         for y in (self.lst):
@@ -53,7 +55,7 @@ class Main(QtWidgets.QMainWindow, Ui_TreeNotesWin):
 
     def get_Val_edit(self, val):
         self.idx = val.row()
-        self.txt = self.dir.entryList()[self.idx]
+        self.txt = self.dir[self.idx]
         ic(val.data())
         ic(val.row())
         ic(self.txt)
@@ -69,8 +71,7 @@ class Main(QtWidgets.QMainWindow, Ui_TreeNotesWin):
         self.highlightindex = self.treemodel.itemData(
             self.ui.treeRevNote.selectedIndexes()[0])
         ic(self.highlightindex[0])
-        self.fdir = self.dir.path() + '/'
-        self.myfname = self.fdir + self.highlightindex[0] + ".txt"
+        self.myfname = self.dir[self.highlightindex]
         ic(self.myfname)
         self.fod = open(self.myfname)
         self.fdata = self.fod.read()
