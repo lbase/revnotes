@@ -9,6 +9,8 @@ from tree_notes import Ui_TreeNotesWin
 import tbar_rc
 from lclsearch import revsearch
 
+# ic.disable()
+
 
 class Main(QtWidgets.QMainWindow, Ui_TreeNotesWin):
     """docstring for main."""
@@ -34,7 +36,7 @@ class Main(QtWidgets.QMainWindow, Ui_TreeNotesWin):
         for y in (self.lst):
             self.myitem = y
             self.treemodel.appendRow(QStandardItem(self.myitem))
-        self.ui.treeRevNote.doubleClicked.connect(self.get_Val_edit)
+        self.ui.treeRevNote.clicked.connect(self.get_Val_edit)
 
     def setuptbar(self):
         self.tbarbtn01 = QtWidgets.QAction("open", self)
@@ -62,18 +64,11 @@ class Main(QtWidgets.QMainWindow, Ui_TreeNotesWin):
         ic(val.data())
         ic(val.row())
         ic(self.txt)
-        #print(val.column())
-        #self.fdir = self.dir[self.txt]
         self.myfname = self.dir[self.idx]
         ic(self.myfname)
-        # self.fod = open(self.myfname)
-        #self.fdata = self.txtbody[self.idx]
-        #self.ui.txtRevNote.setText(self.txtbody[self.idx])
         self.ui.txtRevNote.setText(self.txtbody[val.row()])
 
     def get_Val_tbar_edit(self):
-        #self.highlightindex = self.treemodel.itemData(
-        #    self.ui.treeRevNote.selectedIndexes()[0])
         self.highlightindex = self.ui.treeRevNote.selectedIndexes()
         ic(self.highlightindex)
         self.myfname = self.dir[self.highlightindex]
