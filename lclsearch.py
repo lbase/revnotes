@@ -59,13 +59,16 @@ class revsearch():
 
     def TxtFileBody(self, root):
         self.txtdir = root
-        self.txtlist2 = glob.glob(root + "/*.txt")
+        # self.txtlist2 = glob.glob(self.txtdir + "*.txt")
+        #self.globtx = self.txtdir + '*.txt'
+        self.txtlist2 = glob.glob(self.txtdir)
         self.bodytext = []
         for f in self.txtlist2:
             g = open(f)
-            k =  g.read()
-            self.bodytext.append(k)    
-        return self.bodytext        
+            k = g.read()
+            self.bodytext.append(k)
+        return self.bodytext
+
     def TxtFiles(self, root):
         self.root = root
         self.RevFiles = []

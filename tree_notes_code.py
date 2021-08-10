@@ -26,6 +26,9 @@ class Main(QtWidgets.QMainWindow, Ui_TreeNotesWin):
         ic(self.dir)
         self.lst = revsearch.TxtFiles(self, "/home/rfile/rev_clips")
         ic(self.lst)
+        self.txtbody = revsearch.TxtFileBody(self,
+                                             "/home/rfile/rev_clips/*.txt")
+        ic(self.txtbody)
         self.treemodel = QStandardItemModel(0, 1)
         self.ui.treeRevNote.setModel(self.treemodel)
         for y in (self.lst):
@@ -60,17 +63,19 @@ class Main(QtWidgets.QMainWindow, Ui_TreeNotesWin):
         ic(val.row())
         ic(self.txt)
         #print(val.column())
-        self.fdir = self.dir.path() + '/'
-        self.myfname = self.fdir + self.dir.entryList()[self.idx]
+        #self.fdir = self.dir[self.txt]
+        self.myfname = self.dir[self.idx]
         ic(self.myfname)
-        self.fod = open(self.myfname)
-        self.fdata = self.fod.read()
-        self.ui.txtRevNote.setText(self.fdata)
+        # self.fod = open(self.myfname)
+        #self.fdata = self.txtbody[self.idx]
+        #self.ui.txtRevNote.setText(self.txtbody[self.idx])
+        self.ui.txtRevNote.setText(self.txtbody[val.row()])
 
     def get_Val_tbar_edit(self):
-        self.highlightindex = self.treemodel.itemData(
-            self.ui.treeRevNote.selectedIndexes()[0])
-        ic(self.highlightindex[0])
+        #self.highlightindex = self.treemodel.itemData(
+        #    self.ui.treeRevNote.selectedIndexes()[0])
+        self.highlightindex = self.ui.treeRevNote.selectedIndexes()
+        ic(self.highlightindex)
         self.myfname = self.dir[self.highlightindex]
         ic(self.myfname)
         self.fod = open(self.myfname)
