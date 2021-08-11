@@ -30,7 +30,7 @@ class Main(QtWidgets.QMainWindow, Ui_TreeNotesWin):
         ic(self.lst)
         self.txtbody = revsearch.TxtFileBody(self,
                                              "/home/rfile/rev_clips/*.txt")
-        ic(self.txtbody)
+        #ic(self.txtbody)
         self.treemodel = QStandardItemModel(0, 1)
         self.ui.treeRevNote.setModel(self.treemodel)
         for y in (self.lst):
@@ -56,7 +56,9 @@ class Main(QtWidgets.QMainWindow, Ui_TreeNotesWin):
         self.ui.toolBar.addAction(self.tbarbtn03)
         #menu file rename
         self.ui.actionReName.triggered.connect(self.file_rename)
+
         #self.ui.toolBar
+        self.ui.btnSearch.clicked.connect(self.file_search)
 
     def get_Val_edit(self, val):
         self.idx = val.row()
@@ -97,6 +99,11 @@ class Main(QtWidgets.QMainWindow, Ui_TreeNotesWin):
         if self.text[1]:
             os.rename(self.myfname, self.text[0])
             self.setuptreeview()
+
+    def file_search(self):
+        self.srch = self.ui.searchEdit.text()
+        self.res = [i for i in self.txtbody if self.srch in i]
+        self.ui.txtRevNote.setText(self.res[0])
 
 
 if __name__ == "__main__":

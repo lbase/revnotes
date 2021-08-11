@@ -31,7 +31,7 @@ class revsearch():
         self.writer = self.ix.writer()
         try:
 
-            self.filepaths = self.txtfilelist(root)
+            self.filepaths = self.TxtFileList(root)
             for path in self.filepaths:
                 fp = open(path, 'r')
                 text = fp.read()
