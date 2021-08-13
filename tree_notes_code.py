@@ -24,12 +24,12 @@ class Main(QtWidgets.QMainWindow, Ui_TreeNotesWin):
         self.clipboard = QGuiApplication.clipboard()
 
     def setuptreeview(self):
-        self.dir = revsearch.TxtFileList(self, "/home/rfile/revclips/")
+        self.dir = revsearch.TxtFileList(self, "/home/rfile/rev_clips/")
         ic(self.dir)
-        self.lst = revsearch.TxtFiles(self, "/home/rfile/revclips")
+        self.lst = revsearch.TxtFiles(self, "/home/rfile/rev_clips")
         ic(self.lst)
         self.txtbody = revsearch.TxtFileBody(self,
-                                             "/home/rfile/revclips/*.txt")
+                                             "/home/rfile/rev_clips/*.txt")
         #ic(self.txtbody)
         self.treemodel = QStandardItemModel(0, 1)
         
@@ -130,9 +130,7 @@ class Main(QtWidgets.QMainWindow, Ui_TreeNotesWin):
                 self.finish_search(m)
 
         else:
-            msgbox = QtWidgets.QMessageBox()
-            msgbox.setText("Did not find search string")
-            msgbox.exec()
+            self.finish_search("not found")
 
     def finish_search(self, mytext):
         self.revtxt = mytext
