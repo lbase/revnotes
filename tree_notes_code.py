@@ -9,7 +9,7 @@ from tree_notes import Ui_TreeNotesWin
 import tbar_rc
 from lclsearch import revsearch
 
-# ic.disable()
+ic.disable()
 
 
 class Main(QtWidgets.QMainWindow, Ui_TreeNotesWin):
@@ -24,14 +24,18 @@ class Main(QtWidgets.QMainWindow, Ui_TreeNotesWin):
         self.clipboard = QGuiApplication.clipboard()
 
     def setuptreeview(self):
-        self.dir = revsearch.TxtFileList(self, "/home/rfile/rev_clips/")
+        self.dir = revsearch.TxtFileList(self, "/home/rfile/revclips/")
         ic(self.dir)
-        self.lst = revsearch.TxtFiles(self, "/home/rfile/rev_clips")
+        self.lst = revsearch.TxtFiles(self, "/home/rfile/revclips")
         ic(self.lst)
         self.txtbody = revsearch.TxtFileBody(self,
-                                             "/home/rfile/rev_clips/*.txt")
+                                             "/home/rfile/revclips/*.txt")
         #ic(self.txtbody)
         self.treemodel = QStandardItemModel(0, 1)
+        
+        #self.ui.treeRevNote.resizeColumnToContents(0)
+        # self.ui.treeRevNote.setSizeAdjustPolicy(QtWidgets.QAbstractScrollArea.AdjustToContents)
+
         self.ui.treeRevNote.setModel(self.treemodel)
         for y in (self.lst):
             self.myitem = y
@@ -55,7 +59,7 @@ class Main(QtWidgets.QMainWindow, Ui_TreeNotesWin):
         self.tbarbtn03.triggered.connect(self.file_rename)
         self.ui.toolBar.addAction(self.tbarbtn03)
         self.tbarbtn04 = QtWidgets.QAction('copy sel', self)
-        self.tbarbtn04.setIcon(QIcon(":/icons/cliplist.png"))
+        self.tbarbtn04.setIcon(QIcon(":/icons/clippast.png"))
         self.tbarbtn04.setStatusTip("copy selection")
         self.tbarbtn04.triggered.connect(self.sel_txt_to_clp)
         self.ui.toolBar.addAction(self.tbarbtn04)
