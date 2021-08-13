@@ -59,6 +59,7 @@ class Main(QtWidgets.QMainWindow, Ui_TreeNotesWin):
 
         #self.ui.toolBar
         self.ui.btnSearch.clicked.connect(self.file_search)
+        self.ui.btnNext.setEnabled(False)
 
     def get_Val_edit(self, val):
         self.idx = val.row()
@@ -90,8 +91,8 @@ class Main(QtWidgets.QMainWindow, Ui_TreeNotesWin):
         self.highlightindex = self.treemodel.itemData(
             self.ui.treeRevNote.selectedIndexes()[0])
         ic(self.highlightindex[0])
-        self.fdir = self.dir.path() + '/'
-        self.myfname = self.fdir + self.highlightindex[0] + ".txt"
+        # self.fdir = self.dir.path() + '/'
+        # self.myfname = self.fdir + self.highlightindex[0] + ".txt"
         self.text = QtWidgets.QInputDialog.getText(self,
                                                    'rename',
                                                    'rename file:',
@@ -102,8 +103,27 @@ class Main(QtWidgets.QMainWindow, Ui_TreeNotesWin):
 
     def file_search(self):
         self.srch = self.ui.searchEdit.text()
+        self.ui.txtRevNote.clear()
+        # self.res = [i for i in self.txtbody if self.srch in i]
         self.res = [i for i in self.txtbody if self.srch in i]
-        self.ui.txtRevNote.setText(self.res[0])
+        ic(self.res)
+        if len(self.res):
+            # self.ui.txtRevNote.setText(self.res[0])
+            #self.finish_search(self.res[0])
+            #if len(self.res) > 1:
+            ic(len(self.res))
+            # self.ui.btnNext.setEnabled(True)
+            for m in self.res:
+                self.finish_search(m)
+
+        else:
+            msgbox = QtWidgets.QMessageBox()
+            msgbox.setText("Did not find search string")
+            msgbox.exec()
+
+    def finish_search(self, mytext):
+        self.revtxt = mytext
+        self.ui.txtRevNote.append(self.revtxt)
 
 
 if __name__ == "__main__":
