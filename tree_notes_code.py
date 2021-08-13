@@ -40,20 +40,25 @@ class Main(QtWidgets.QMainWindow, Ui_TreeNotesWin):
 
     def setuptbar(self):
         self.tbarbtn01 = QtWidgets.QAction("open", self)
-        self.tbarbtn01.setIcon(QIcon(":/icon/bdoccopy.png"))
+        self.tbarbtn01.setIcon(QIcon(":/icons/bdoccopy.png"))
         self.tbarbtn01.setStatusTip("open")
         self.tbarbtn01.triggered.connect(self.get_Val_tbar_edit)
         self.ui.toolBar.addAction(self.tbarbtn01)
         self.tbarbtn02 = QtWidgets.QAction("copy_all", self)
         self.tbarbtn02.setStatusTip("copy all")
-        self.tbarbtn02.setIcon(QIcon(":/icon/cliptext.png"))
+        self.tbarbtn02.setIcon(QIcon(":/icons/cliptext.png"))
         self.tbarbtn02.triggered.connect(self.txt_to_clp)
         self.ui.toolBar.addAction(self.tbarbtn02)
         self.tbarbtn03 = QtWidgets.QAction("rename", self)
         self.tbarbtn03.setStatusTip("rename file")
-        self.tbarbtn03.setIcon(QIcon(":icon/docrename.png"))
+        self.tbarbtn03.setIcon(QIcon(":icons/docrename.png"))
         self.tbarbtn03.triggered.connect(self.file_rename)
         self.ui.toolBar.addAction(self.tbarbtn03)
+        self.tbarbtn04 = QtWidgets.QAction('copy sel', self)
+        self.tbarbtn04.setIcon(QIcon(":/icons/cliplist.png"))
+        self.tbarbtn04.setStatusTip("copy selection")
+        self.tbarbtn04.triggered.connect(self.sel_txt_to_clp)
+        self.ui.toolBar.addAction(self.tbarbtn04)
         #menu file rename
         self.ui.actionReName.triggered.connect(self.file_rename)
 
@@ -86,6 +91,10 @@ class Main(QtWidgets.QMainWindow, Ui_TreeNotesWin):
            (self.cursor.selectionStart(), self.cursor.selectionEnd()))
         ic(self.cursor.selectedText())
         self.clipboard.setText(self.ui.txtRevNote.toPlainText())
+
+    def sel_txt_to_clp(self):
+        self.cursor = self.ui.txtRevNote.textCursor()
+        self.clipboard.setText(self.cursor.selectedText())
 
     def file_rename(self):
         self.highlightindex = self.treemodel.itemData(
