@@ -24,12 +24,12 @@ class Main(QtWidgets.QMainWindow, Ui_TreeNotesWin):
         self.clipboard = QGuiApplication.clipboard()
 
     def setuptreeview(self):
-        self.dir = revsearch.TxtFileList(self, "/home/rfile/rev_clips/")
+        self.dir = revsearch.TxtFileList(self, "/home/rfile/revclips/")
         ic(self.dir)
-        self.lst = revsearch.TxtFiles(self, "/home/rfile/rev_clips")
+        self.lst = revsearch.TxtFiles(self, "/home/rfile/revclips")
         ic(self.lst)
         self.txtbody = revsearch.TxtFileBody(self,
-                                             "/home/rfile/rev_clips/*.txt")
+                                             "/home/rfile/revclips/*.txt")
         #ic(self.txtbody)
         self.treemodel = QStandardItemModel(0, 1)
 
