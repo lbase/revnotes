@@ -32,7 +32,7 @@ class Main(QtWidgets.QMainWindow, Ui_TreeNotesWin):
                                              "/home/rfile/rev_clips/*.txt")
         #ic(self.txtbody)
         self.treemodel = QStandardItemModel(0, 1)
-        
+
         #self.ui.treeRevNote.resizeColumnToContents(0)
         # self.ui.treeRevNote.setSizeAdjustPolicy(QtWidgets.QAbstractScrollArea.AdjustToContents)
 
@@ -69,6 +69,7 @@ class Main(QtWidgets.QMainWindow, Ui_TreeNotesWin):
         #self.ui.toolBar
         self.ui.btnSearch.clicked.connect(self.file_search)
         self.ui.btnNext.setEnabled(False)
+        self.ui.searchEdit.returnPressed.connect(self.file_search)
 
     def get_Val_edit(self, val):
         self.idx = val.row()
