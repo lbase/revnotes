@@ -4,8 +4,8 @@ from PyQt5.QtCore import QSize, QSortFilterProxyModel, Qt
 from PyQt5.QtSql import QSqlDatabase, QSqlQuery, QSqlQueryModel, QSqlTableModel
 from PyQt5.QtWidgets import QApplication, QMainWindow, QTableView
 from PyQt5 import QtCore
+from PyQt5.QtGui import *
 from icecream import ic
-from icecream.icecream import IceCreamDebugger
 from showtablewin import Ui_TblWin
 
 
@@ -14,6 +14,7 @@ class Main(QMainWindow, Ui_TblWin):
         super().__init__()
         self.ui = Ui_TblWin()
         self.ui.setupUi(self)
+        self.clipboard = QGuiApplication.clipboard()
         self.conn_name = "dbshowqry"
         self.db = QSqlDatabase.addDatabase("QSQLITE", self.conn_name)
         self.db.setDatabaseName("/home/rfile/python3/revnotes/notes.db")
@@ -39,8 +40,11 @@ class Main(QMainWindow, Ui_TblWin):
         self.ui.tb1.setColumnWidth(2, 200)
         # self.ui.tb1.setColumnWidth(3, 500)
         self.ui.tb1.resizeColumnToContents(3)
+        #self.ui.tb1.resizeRowsToContents()
         self.ui.tb1.setColumnHidden(0, 1)
+        self.ui.tb1.setColumnHidden(1, 1)
         self.ui.tb1.setColumnWidth(3, 300)
+        self.ui.tb1.setSelectionBehavior(0)
         # self.ui.tb1.clicked.connect(self.copy_Content)
         # self.ui.tb1.wordWrap()
         self.ui.btnVform.clicked.connect(self.add_new)
@@ -48,6 +52,9 @@ class Main(QMainWindow, Ui_TblWin):
         self.ui.actionExit.triggered.connect(self.exitFunc)
         # self.ui.btnGraphbp.clicked.connect(self.bpgraph)
         self.ui.btnDelete.clicked.connect(self.delrows)
+        # self.ui.btnCopy.clicked.connect(self.copy_cell)
+        self.ui.tb1.clicked.connect(self.cell_was_clicked,
+                                    self.ui.tb1.currentIndex())
         self.setWindowTitle(table_name)
         # self.ui.lineSearch.textChanged.connect(
         # self.ui.lineSearch.textEdited.connect(
@@ -109,6 +116,16 @@ class Main(QMainWindow, Ui_TblWin):
         count = len(rows)
         self.model.removeRows(first, count)
         self.model.submitAll()
+
+    def copy_cell(self):
+        self.col = self.ui.tb1.selectedIndexes()
+        self.clipboard.text(self.col)
+
+    def cell_was_clicked(self, row, column):
+        print("Row %d and Column %d was clicked" % (row, column))
+        item = self.ui.tb1.itemAt(row, column)
+        self.ID = item.text()
+        ic(self.ID)
 
     def exitFunc(self):
         self.db.close()
