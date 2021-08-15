@@ -7,6 +7,7 @@ from PyQt5 import QtCore
 from PyQt5.QtGui import *
 from icecream import ic
 from show_revnotes import Ui_RevNoteWin
+from lclsearch import TableModel
 
 
 class Main(QMainWindow, Ui_RevNoteWin):
@@ -22,6 +23,7 @@ class Main(QMainWindow, Ui_RevNoteWin):
         ok = self.db.open()
 
         self.model = QSqlTableModel(db=self.db)
+        self.lclproxy()
         self.addmap()
 
         self.model.setTable(self.table_name)
@@ -34,7 +36,9 @@ class Main(QMainWindow, Ui_RevNoteWin):
         self.ui.btnPrev.clicked.connect(self.mapper.toPrevious)
         self.ui.btnNext.clicked.connect(self.mapper.toNext)
         self.ui.btnCopy.clicked.connect(self.txt_to_clp)
-        self.ui.lineSearch.returnPressed.connect(self.filterTable)
+        #self.ui.lineSearch.returnPressed.connect(self.filterTable)
+        #self.ui.lineSearch.textChanged.connect(
+        #    self.proxy_model.setFilterFixedString)
         # self.ui.lineSearch.keyPressEvent.connect()
         # self.ui.btnGraphbp.clicked.connect(self.bpgraph)
         self.ui.btnDelete.clicked.connect(self.delrows)
@@ -43,7 +47,8 @@ class Main(QMainWindow, Ui_RevNoteWin):
 
     def addmap(self):
         self.mapper = QDataWidgetMapper()
-        self.mapper.setModel(self.model)
+        # self.mapper.setModel(self.model)
+        self.mapper.setModel(self.proxy_model)
         self.mapper.addMapping(self.ui.spinID, 0)
         self.mapper.addMapping(self.ui.spinCat, 1)
         self.mapper.addMapping(self.ui.txtTitle, 2)
@@ -58,13 +63,14 @@ class Main(QMainWindow, Ui_RevNoteWin):
         # proxy
     def lclproxy(self):
         self.proxy_model = QSortFilterProxyModel()
-        self.proxy_model.setFilterKeyColumn(-1)  # Search all columns.
         self.proxy_model.setSourceModel(self.model)
-
+        self.proxy_model.setFilterKeyColumn(int(-1))  # Search all columns.
         self.proxy_model.sort(0, Qt.AscendingOrder)
-        self.mapper.setModel(self.proxy_model)
+        #self.mapper.setModel(self.proxy_model)
         self.ui.lineSearch.textChanged.connect(
             self.proxy_model.setFilterFixedString)
+        #self.ui.lineSearch.textChanged.connect(
+        #   self.proxy_model.setFilterKeyColumn)
 
     def add_new(self):
         self.model.insertRow(0)

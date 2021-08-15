@@ -37,14 +37,14 @@ class Main(QMainWindow, Ui_TblWin):
 
         self.ui.tb1.setModel(self.proxy_model)
         self.ui.tb1.resizeRowsToContents()
-        self.ui.tb1.setColumnWidth(2, 200)
-        # self.ui.tb1.setColumnWidth(3, 500)
-        self.ui.tb1.resizeColumnToContents(3)
+        # self.ui.tb1.setColumnWidth(2, 200)
+        self.ui.tb1.setColumnWidth(3, 500)
+        # self.ui.tb1.resizeColumnToContents(3)
         #self.ui.tb1.resizeRowsToContents()
         self.ui.tb1.setColumnHidden(0, 1)
         self.ui.tb1.setColumnHidden(1, 1)
-        self.ui.tb1.setColumnWidth(3, 300)
-        self.ui.tb1.setSelectionBehavior(0)
+        # self.ui.tb1.setColumnWidth(3, 300)
+        # self.ui.tb1.setSelectionBehavior(0)
         # self.ui.tb1.clicked.connect(self.copy_Content)
         # self.ui.tb1.wordWrap()
         self.ui.btnVform.clicked.connect(self.add_new)
@@ -53,8 +53,8 @@ class Main(QMainWindow, Ui_TblWin):
         # self.ui.btnGraphbp.clicked.connect(self.bpgraph)
         self.ui.btnDelete.clicked.connect(self.delrows)
         # self.ui.btnCopy.clicked.connect(self.copy_cell)
-        self.ui.tb1.clicked.connect(self.cell_was_clicked,
-                                    self.ui.tb1.currentIndex())
+        self.ui.tb1.clicked.connect(self.cell_was_clicked)
+
         self.setWindowTitle(table_name)
         # self.ui.lineSearch.textChanged.connect(
         # self.ui.lineSearch.textEdited.connect(
@@ -118,14 +118,27 @@ class Main(QMainWindow, Ui_TblWin):
         self.model.submitAll()
 
     def copy_cell(self):
-        self.col = self.ui.tb1.selectedIndexes()
-        self.clipboard.text(self.col)
+        # self.col = self.ui.tb1.selectedIndexes()
+        self.sel_index = (self.ui.tb1.selectionModel().currentIndex())
+        self.sel_value = self.sel_index.sibling(
+            self.sel_index.row(), self.sel_index.column()).data()
+        ic(self.sel_value)
+        self.clipboard.setText(self.sel_value)
 
-    def cell_was_clicked(self, row, column):
-        print("Row %d and Column %d was clicked" % (row, column))
-        item = self.ui.tb1.itemAt(row, column)
-        self.ID = item.text()
-        ic(self.ID)
+    def cell_was_clicked(self):
+        # row = self.ui.tb1.rowAt()
+        # column = self.ui.tb1.columnAt()
+        # print("Row %d and Column %d was clicked" % (row, column))
+        # item = self.ui.tb1.itemAt(row, column)
+        # self.ID = item.text()
+        # ic(self.ID)
+        # #selected cell value.
+        self.sel_index = (self.ui.tb1.selectionModel().currentIndex())
+        # print(index)
+        self.sel_value = self.sel_index.sibling(
+            self.sel_index.row(), self.sel_index.column()).data()
+        self.clipboard.setText(self.sel_value)
+        # ic(self.sel_value)
 
     def exitFunc(self):
         self.db.close()
