@@ -89,7 +89,8 @@ class TableModel(QAbstractTableModel):
             # See below for the nested-list data structure.
             # .row() indexes into the outer list,
             # .column() indexes into the sub-list
-            return self._data[index.row()][index.column()]
+            #return self._data[index.row()][index.column()]
+            pass
 
     def rowCount(self, index):
         # The length of the outer list.
