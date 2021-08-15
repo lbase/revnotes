@@ -35,7 +35,7 @@ class Main(QtWidgets.QMainWindow, Ui_TreeNotesWin):
                                              "/home/rfile/revclips/*.txt")
         #ic(self.txtbody)
         self.treemodel = QStandardItemModel(0, 1)
-        self.setupModel()
+
         #self.ui.treeRevNote.resizeColumnToContents(0)
         # self.ui.treeRevNote.setSizeAdjustPolicy(QtWidgets.QAbstractScrollArea.AdjustToContents)
 
@@ -68,7 +68,7 @@ class Main(QtWidgets.QMainWindow, Ui_TreeNotesWin):
         self.ui.toolBar.addAction(self.tbarbtn04)
         #menu file rename
         self.ui.actionReName.triggered.connect(self.file_rename)
-
+        self.setupModel()
         #self.ui.toolBar
         self.ui.btnSearch.clicked.connect(self.file_search)
         self.ui.btnNext.setEnabled(False)
@@ -79,10 +79,12 @@ class Main(QtWidgets.QMainWindow, Ui_TreeNotesWin):
     def setupModel(self):
         self.model = TableModel(self.txtbody)
         self.proxy_model = QSortFilterProxyModel()
+        self.proxy_model.setSourceModel(self.model)
+
         self.proxy_model.setFilterKeyColumn(0)  # Search all columns.
         self.proxy_model.sort(0, Qt.AscendingOrder)
-        self.proxy_model.setSourceModel(self.model)
-        self.txtRevNote.setModel(self.proxy_model)
+
+        self.ui.txtRevNote.setModel(self.proxy_model)
 
     def get_Val_edit(self, val):
         self.idx = val.row()

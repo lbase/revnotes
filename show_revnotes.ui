@@ -141,6 +141,19 @@
      </rect>
     </property>
    </widget>
+   <widget class="QPushButton" name="btnCopy">
+    <property name="geometry">
+     <rect>
+      <x>40</x>
+      <y>440</y>
+      <width>105</width>
+      <height>39</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>&amp;Copy</string>
+    </property>
+   </widget>
   </widget>
   <widget class="QMenuBar" name="menubar">
    <property name="geometry">

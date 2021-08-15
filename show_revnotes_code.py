@@ -33,6 +33,9 @@ class Main(QMainWindow, Ui_RevNoteWin):
         self.ui.actionExit.triggered.connect(self.exitFunc)
         self.ui.btnPrev.clicked.connect(self.mapper.toPrevious)
         self.ui.btnNext.clicked.connect(self.mapper.toNext)
+        self.ui.btnCopy.clicked.connect(self.txt_to_clp)
+        self.ui.lineSearch.returnPressed.connect(self.filterTable)
+        # self.ui.lineSearch.keyPressEvent.connect()
         # self.ui.btnGraphbp.clicked.connect(self.bpgraph)
         self.ui.btnDelete.clicked.connect(self.delrows)
 
@@ -69,6 +72,7 @@ class Main(QMainWindow, Ui_RevNoteWin):
     def refreshrecs(self):
         self.model.setFilter('')
         self.model.select()
+        self.mapper.submit()
         # self.ui.tb1.setModel(self.model)
         #self.ui.tb1.reset()
         self.showSbar("refresh")
@@ -89,8 +93,8 @@ class Main(QMainWindow, Ui_RevNoteWin):
         #self.proxy_model.setFilter(self.filterQuery)
 
         self.proxy_model.select()
-        self.ui.tb1.setModel(self.proxy_model)
-        self.ui.tb1.reset()
+        self.ui.txtContent.setModel(self.proxy_model)
+        self.ui.txtContent.reset()
         search = QtCore.QRegExp(self.text, QtCore.Qt.CaseInsensitive,
                                 QtCore.QRegExp.RegExp)
         self.proxy_model.setFilterRegExp(search)
@@ -99,6 +103,21 @@ class Main(QMainWindow, Ui_RevNoteWin):
 
     def showSbar(self, msg):
         self.ui.statusbar.showMessage(msg)
+
+    def txt_to_clp(self):
+        self.cursor = self.ui.txtContent.textCursor()
+        ic("Selection start: %d end: %d" %
+           (self.cursor.selectionStart(), self.cursor.selectionEnd()))
+        ic(self.cursor.selectedText())
+        self.clipboard.setText(self.ui.txtContent.toPlainText())
+
+    def filterTable(self):
+        self.filterText = self.ui.lineSearch.text()
+        self.filterQuery = 'content like %' + self.filterText + '%'
+        self.model.setFilter(self.filterQuery)
+        self.model.select()
+        self.mapper.submit()
+        # self.ui.tb1.setModel(self.model)
 
     def delrows(self):
         self.showSbar("remove highlighted rows")
