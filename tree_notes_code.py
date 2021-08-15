@@ -81,7 +81,7 @@ class Main(QtWidgets.QMainWindow, Ui_TreeNotesWin):
         self.proxy_model = QSortFilterProxyModel()
         self.proxy_model.setSourceModel(self.model)
 
-        self.proxy_model.setFilterKeyColumn(0)  # Search all columns.
+        self.proxy_model.setFilterKeyColumn(-1)  # Search all columns.
         self.proxy_model.sort(0, Qt.AscendingOrder)
 
         self.ui.txtRevNote.setModel(self.proxy_model)
