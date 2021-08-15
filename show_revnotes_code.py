@@ -4,8 +4,8 @@ from PyQt5.QtCore import QSize, QSortFilterProxyModel, Qt
 from PyQt5.QtSql import QSqlDatabase, QSqlQuery, QSqlQueryModel, QSqlTableModel
 from PyQt5.QtWidgets import QApplication, QDataWidgetMapper, QMainWindow, QTableView
 from PyQt5 import QtCore
+from PyQt5.QtGui import *
 from icecream import ic
-from icecream.icecream import IceCreamDebugger
 from show_revnotes import Ui_RevNoteWin
 
 
@@ -15,6 +15,7 @@ class Main(QMainWindow, Ui_RevNoteWin):
         self.table_name = table_name
         self.ui = Ui_RevNoteWin()
         self.ui.setupUi(self)
+        self.clipboard = QGuiApplication.clipboard()
         self.conn_name = "dbshowqry"
         self.db = QSqlDatabase.addDatabase("QSQLITE", self.conn_name)
         self.db.setDatabaseName("/home/rfile/python3/revnotes/notes.db")
@@ -54,7 +55,7 @@ class Main(QMainWindow, Ui_RevNoteWin):
         # proxy
     def lclproxy(self):
         self.proxy_model = QSortFilterProxyModel()
-        self.proxy_model.setFilterKeyColumn(3)  # Search all columns.
+        self.proxy_model.setFilterKeyColumn(-1)  # Search all columns.
         self.proxy_model.setSourceModel(self.model)
 
         self.proxy_model.sort(0, Qt.AscendingOrder)
