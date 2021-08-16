@@ -3,16 +3,15 @@ from PyQt5 import QtGui
 from icecream import ic
 from PyQt5 import QtWidgets
 from PyQt5.QtCore import QDir, QFile
-# from PyQt5.QtGui import QClipboard, QIcon, QStandardItem, QStandardItemModel
+
 from PyQt5.QtGui import *
 from tree_notes import Ui_TreeNotesWin
 import tbar_rc
-from lclsearch import revsearch, TableModel
-# tablemodel
+from lclsearch import revsearch
 
 from PyQt5.QtCore import Qt, QSortFilterProxyModel, QAbstractTableModel
 
-ic.disable()
+# ic.disable()
 
 
 class Main(QtWidgets.QMainWindow, Ui_TreeNotesWin):
@@ -68,23 +67,9 @@ class Main(QtWidgets.QMainWindow, Ui_TreeNotesWin):
         self.ui.toolBar.addAction(self.tbarbtn04)
         #menu file rename
         self.ui.actionReName.triggered.connect(self.file_rename)
-        self.setupModel()
-        #self.ui.toolBar
         self.ui.btnSearch.clicked.connect(self.file_search)
         self.ui.btnNext.setEnabled(False)
         self.ui.searchEdit.returnPressed.connect(self.file_search)
-        self.ui.searchEdit.textChanged.connect(
-            self.proxy_model.setFilterFixedString)
-
-    def setupModel(self):
-        self.model = TableModel(self.txtbody)
-        self.proxy_model = QSortFilterProxyModel()
-        self.proxy_model.setSourceModel(self.model)
-
-        self.proxy_model.setFilterKeyColumn(-1)  # Search all columns.
-        self.proxy_model.sort(0, Qt.AscendingOrder)
-
-        self.ui.txtRevNote.setModel(self.proxy_model)
 
     def get_Val_edit(self, val):
         self.idx = val.row()
