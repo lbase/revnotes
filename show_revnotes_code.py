@@ -64,13 +64,16 @@ class Main(QMainWindow, Ui_RevNoteWin):
     def lclproxy(self):
         self.proxy_model = QSortFilterProxyModel()
         self.proxy_model.setSourceModel(self.model)
-        self.proxy_model.setFilterKeyColumn(int(-1))  # Search all columns.
-        self.proxy_model.sort(0, Qt.AscendingOrder)
+        self.proxy_model.setFilterKeyColumn(
+            3)  # Search all columns -1 3 should be content
+        # self.proxy_model.sort(0, Qt.AscendingOrder)
+        self.proxy_model.setDynamicSortFilter
         #self.mapper.setModel(self.proxy_model)
         self.ui.lineSearch.textChanged.connect(
             self.proxy_model.setFilterFixedString)
         #self.ui.lineSearch.textChanged.connect(
         #   self.proxy_model.setFilterKeyColumn)
+        #self.ui.lineSearch.textChanged.connect(self.proxyFilterTable)
 
     def add_new(self):
         self.model.insertRow(0)

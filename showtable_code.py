@@ -28,22 +28,27 @@ class Main(QMainWindow, Ui_TblWin):
 
         # proxy
         self.proxy_model = QSortFilterProxyModel()
-        self.proxy_model.setFilterKeyColumn(-1)  # Search all columns.
+        self.proxy_model.setFilterKeyColumn(
+            3)  # Search all columns is -1 3 should be content
         self.proxy_model.setSourceModel(self.model)
-
+        # self.proxy_model.dynamicSortFilter()
         self.proxy_model.sort(0, Qt.AscendingOrder)
 
         self.ui.tb1.setModel(self.proxy_model)
 
         self.ui.tb1.setModel(self.proxy_model)
-        self.ui.tb1.resizeRowsToContents()
+        # self.ui.tb1.resizeRowsToContents()
+        #self.ui.tb1.resizeColumnsToContents()
+
         # self.ui.tb1.setColumnWidth(2, 200)
-        self.ui.tb1.setColumnWidth(3, 500)
-        # self.ui.tb1.resizeColumnToContents(3)
+        # self.ui.tb1.setColumnWidth(3, 500)
+        self.ui.tb1.resizeColumnToContents(3)
         #self.ui.tb1.resizeRowsToContents()
         self.ui.tb1.setColumnHidden(0, 1)
         self.ui.tb1.setColumnHidden(1, 1)
+        self.ui.tb1.setColumnHidden(2, 1)
         # self.ui.tb1.setColumnWidth(3, 300)
+        #self.ui.tb1.setRowHeight(100)
         # self.ui.tb1.setSelectionBehavior(0)
         # self.ui.tb1.clicked.connect(self.copy_Content)
         # self.ui.tb1.wordWrap()
@@ -59,9 +64,11 @@ class Main(QMainWindow, Ui_TblWin):
         # self.ui.lineSearch.textChanged.connect(
         # self.ui.lineSearch.textEdited.connect(
         #    self.proxy_model.setFilterFixedString)
-        # self.ui.lineSearch.returnPressed.connect(self.proxyFilterTable)
+        #self.ui.lineSearch.returnPressed.connect(self.proxyFilterTable)
+        #self.ui.lineSearch.textChanged.connect(
+        #    self.proxy_model.setFilterFixedString)
         self.ui.lineSearch.textChanged.connect(
-            self.proxy_model.setFilterFixedString)
+            self.proxy_model.setFilterRegExp)
 
         self.showSbar("Setup Complete")
 
