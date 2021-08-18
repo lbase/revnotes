@@ -7,7 +7,8 @@ import sys
 from whoosh.qparser import QueryParser
 from whoosh import scoring
 from whoosh.index import open_dir
-# test note from bubba
+import re
+from unicodedata import category
 from PyQt5.QtCore import Qt, QSortFilterProxyModel, QAbstractTableModel
 
 
@@ -77,6 +78,23 @@ class revsearch():
             if file.endswith(".txt"):
                 self.RevFiles.append(file)
         return self.RevFiles
+
+    def strip_nulls(self, ctrl_txt):
+        ''' strip control characters 
+            using regex
+        '''
+        self.ctrl_txt = ctrl_txt
+        self.t = []
+        for x in self.ctrl_txt:
+            self.t.append(re.sub(r"^\x00", '', x))
+
+    def strip_cat(self, cat_txt):
+        '''
+        strip control characters unicodedata - category
+        see http://flatboy:6969/rfile/revnotes/-/wikis/home
+        '''
+        self / cat_txt = cat_txt
+        return "".join(ch for ch in cat_txt if category(ch)[0] != "C")
 
 
 class TableModel(QAbstractTableModel):
