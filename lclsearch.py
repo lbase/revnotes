@@ -80,7 +80,7 @@ class revsearch():
         return self.RevFiles
 
     def strip_nulls(self, ctrl_txt):
-        ''' strip control characters 
+        ''' strip control characters
             using regex
         '''
         self.ctrl_txt = ctrl_txt
