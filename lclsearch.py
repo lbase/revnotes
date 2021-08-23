@@ -93,7 +93,7 @@ class revsearch():
         strip control characters unicodedata - category
         see http://flatboy:6969/rfile/revnotes/-/wikis/home
         '''
-        self / cat_txt = cat_txt
+        self.cat_txt = cat_txt
         return "".join(ch for ch in cat_txt if category(ch)[0] != "C")
 
 
